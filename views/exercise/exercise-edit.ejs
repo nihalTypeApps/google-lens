@@ -1,0 +1,99 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title"><% if(typeof error === 'undefined'){ %> <%= exercise.title %> <% } else { %> <%= 'Error' %> <% } %></h4>
+</div>
+<form id="exercise-edit-form" method="post" action="/api/update_exercise" enctype="multipart/form-data">
+<div class="modal-body">
+  <%
+  if(typeof error !== 'undefined'){ %>
+  <p class="text-danger"><i class="fa fa-fw fa-warning"></i> <%= error %></p>
+  <% }
+  else{ %>
+    <div class="box box-primary">
+      <div class="box-body">
+        <div class="col-md-9">
+          <div class="box box-primary box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title"></h3>
+            </div>
+            <div class="box-body">
+            <div class="form-group col-sm-12">
+            <label for="title">Title<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+            <input class="form-control" name="title" value="<%= exercise.title %>" type="text" id="title" placeholder="Enter Title">
+            <input type="hidden" name="id" value="<%= exercise.id %>">
+            </div>
+            <div class="form-group col-sm-3">
+            <label for="reps">Reps<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+            <input class="form-control" name="reps" value="<%= exercise.reps %>" type="text" id="reps" placeholder="Enter Reps">
+            </div>
+            <div class="form-group col-sm-3">
+            <label for="sets">Sets<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+            <input class="form-control" name="sets" value="<%= exercise.sets %>" type="text" id="sets" placeholder="Enter Sets">
+            </div>
+            <div class="form-group col-sm-3">
+              <label for="sets">Weight<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+              <input class="form-control" name="weight" value="<%= exercise.weight %>" type="text" id="weight" placeholder="Enter Weight">
+              </div>
+            <div class="form-group col-sm-3">
+            <label for="duration">Duration<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+            <input class="form-control" name="duration" value="<%= exercise.duration %>" type="number" id="duration" placeholder="Enter Duration in Minutes">
+            </div>
+            <div class="form-group col-sm-12">
+            <label for="description">Description<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+            <textarea class="form-control" name="description" id="description" placeholder="Enter Description" rows="8" cols="80"><%= exercise.description %></textarea>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="box box-primary box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title">Upload Image</h3>
+            </div>
+            <div class="box-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  <img class="img-responsive current-image" src="/uploads/exercise/thumb/<%= exercise.image %>" alt="Photo">
+                </div>
+              </div>
+              <input class="form-control" type="file" name="image" id="image" value="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% } %>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary  pull-left" data-dismiss="modal">Close</button>
+  <% if(typeof error === 'undefined'){ %>
+    <button type="submit" class="btn btn-primary  " id="exercise-edit-form-btn" name="button">Update</button>
+  <% } %>
+</div>
+</form>
+<script type="text/javascript">
+  /*user update form*/
+  var form_options = {
+    dataType: "json",
+    beforeSubmit: function(formData, jqForm, options){
+      var formID = jqForm.attr('id');
+      processing_Attr(formID);
+    },
+    success: function(json, responseText, xhr, form){
+      console.log(json);
+      var formID = form.attr('id');
+      if(json.status == 1){
+        successing_Attr(formID,json.data.message);
+        if(json.data.image_url){
+          $(".current-image").attr('src',json.data.image_url);
+        }
+        table.draw(false);
+      }
+      else{
+        error_Attr(formID,json.data.error);
+      }
+    }
+  };
+  $("#exercise-edit-form").ajaxForm(form_options);
+</script>

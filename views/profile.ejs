@@ -1,0 +1,68 @@
+<%- include('partials/header') %>
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>
+          Dashboard
+          <small><%= page_title %></small>
+        </h1>
+        <ol class="breadcrumb">
+          <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+          <li class="active"><%= page_title %></li>
+        </ol>
+      </section>
+      <section class="content">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="box-title"><%= page_title %></h3>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body">
+              <div align="right">
+                <a href="../" class="btn btn-success">Back</a>
+              </div>
+              <% if(typeof msg != 'undefined'){ %>
+                <div class="alert alert-success"><%= msg %></div>
+              <% }
+                if(typeof error !== 'undefined'){ %>
+                <div class="alert alert-danger"><%= error %></div>
+              <% } %>
+              <form id="loginForm" action="" method="POST">
+              <div class="form-group col-sm-6">
+              <label for="Name">Name<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+              <input class="form-control" name="_name" value="<%= user.name %>" type="text" id="user_name" placeholder="Enter Your Name">
+              </div>
+              <div class="form-group col-sm-6">
+              <label for="Email">Email Address<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+              <input class="form-control" name="_email" disabled value="<%= user.email %>" type="text" id="user_email" placeholder="Enter Your Email">
+              </div>
+              <div class="form-group col-sm-6">
+              <label for="Auth_Id">Password</label>
+              <input class="form-control" name="_password" type="text" id="user_password" placeholder="Enter New Password">
+              </div>
+              <div class="form-group col-sm-6">
+              <label for="Confirm_Password">Password Confirmation</label>
+              <input class="form-control" name="_password_confirmation" type="text" id="user_confirm_Password" placeholder="Confirm Password">
+              </div>
+            <div class="form-group col-sm-6">
+            <label for="Auth_Id">Phone<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+            <input class="form-control" name="_phone" value="<%= user.phone %>" type="text" id="user_phone" placeholder="Enter Your Phone Number">
+            </div>
+              <div class="form-group col-sm-12 text-center">
+              <button type="submit" class="btn main-btn" name="button">Update</button>
+              </div>
+              </form>
+              </div>
+              <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </section>
+</div>
+<%- include('partials/footer') %>
+</body>
+</html>

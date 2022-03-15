@@ -1,0 +1,83 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title"><% if(typeof error === 'undefined'){ %> <%= equipment.title %> <% } else { %> <%= 'Error' %> <% } %></h4>
+</div>
+
+<div class="modal-body">
+  <%
+  if(typeof error !== 'undefined'){ %>
+  <p class="text-danger"><i class="fa fa-fw fa-warning"></i> <%= error %></p>
+  <% }
+  else{ %>
+    <table id="assign_exercise" class="table table-bordered table-hover table-inside-modal">
+    <thead>
+    <tr>
+    <th>Sn.</th>
+    <th>Title</th>
+    <th>Image</th>
+    <th>Action</th>
+    </tr>
+    </thead>
+    <tfoot>
+    <tr>
+      <th>Sn.</th>
+      <th>Title</th>
+      <th>Image</th>
+      <th>Action</th>
+    </tr>
+    </tfoot>
+    </table>
+  <% } %>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary  pull-left" data-dismiss="modal">Close</button>
+</div>
+<script type="text/javascript">
+  /*user update form*/
+  var exercise_table = $('#assign_exercise').DataTable({
+      'pageLength':5,
+      'lengthChange': false,
+      'searching'   : false,
+      "processing": true,
+      "serverSide": true,
+      "order": [[ 0, "desc" ]],
+      "ajax":{
+               url: "../equipment/get-exercises-for-assignment",
+               dataType: "json",
+               type: "POST",
+               data:function(data) {
+                data.equipment_id = '<%= equipment.id %>';
+              }
+              // ,
+              // success: function(data){
+              //   console.log(data);
+              // }
+             },
+      "columns": [
+          { "data": "sn" },
+          { "data": "title" },
+          { "data": "image" },
+          { "data": "options" }
+      ]
+
+  });
+
+  var assigThisExercise = function(element){
+    var exercise_id = $(element).attr('value');
+    var action = ($(element).prop("checked") == true)?'add':'delete';
+    var equipment_id = '<%= equipment.id %>';
+    $.ajax({
+      url:'../equipment/process-exercises-assignment',
+      method:'POST',
+      data:{action:action,equipment_id:equipment_id,exercise_id:exercise_id},
+      dataType:'JSON',
+      beforeSend: function(){
+
+      },
+      success: function(json){
+        console.log(json);
+      }
+    });
+  }
+</script>

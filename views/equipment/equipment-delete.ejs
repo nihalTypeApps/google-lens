@@ -1,0 +1,46 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title"><% if(typeof error === 'undefined'){ %> <%= equipment.title %> <% } else { %> <%= 'Error' %> <% } %></h4>
+</div>
+<form id="equipment-delete-form" method="post" action="/api/delete_equipment">
+<div class="modal-body">
+  <%
+  if(typeof error !== 'undefined'){ %>
+  <p class="text-danger"><i class="fa fa-fw fa-warning"></i> <%= error %></p>
+  <% }
+  else{ %>
+    <p class="text-warning"><i class="fa fa-fw fa-warning"></i> Are you sure want to delete this record.</p>
+    <input type="hidden" name="id" value="<%= equipment.id %>">
+   <% } %>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary pull-left" data-dismiss="modal">Close</button>
+  <% if(typeof error === 'undefined'){ %>
+    <button type="submit" class="btn btn-primary " id="equipment-delete-form-btn" name="button">Delete</button>
+  <% } %>
+</div>
+</form>
+<script type="text/javascript">
+  $(function(){
+    /*user update form*/
+    var form_options = {
+      dataType: "json",
+      beforeSubmit: function(formData, jqForm, options){
+        var formID = jqForm.attr('id');
+        processing_Attr(formID);
+      },
+      success: function(json, responseText, xhr, form){
+        var formID = form.attr('id');
+        if(json.status == 1){
+          successing_Attr(formID,json.data.message);
+          table.draw(false);
+        }
+        else{
+          error_Attr(formID,json.data.error);
+        }
+      }
+    };
+    $("#equipment-delete-form").ajaxForm(form_options);
+  })
+</script>

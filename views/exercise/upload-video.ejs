@@ -1,0 +1,205 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title"><% if(typeof error === 'undefined'){ %> <%= exercise.title %> <% } else { %> <%= 'Error' %> <% } %></h4>
+</div>
+
+<div class="modal-body">
+  <%
+  if(typeof error !== 'undefined'){ %>
+  <p class="text-danger"><i class="fa fa-fw fa-warning"></i> <%= error %></p>
+  <% }
+  else{ %>
+    <div class="box box-primary">
+      <div class="box-body">
+        <div class="col-md-5">
+          <div class="box box-primary box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title">Upload Video</h3>
+            </div>
+            <form id="upload-exercise-video-form" method="post" action="../api/upload-video" enctype="multipart/form-data">
+            <div class="box-body">
+            <div class="form-group col-sm-12">
+            <label for="title">Title<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+            <input class="form-control" name="title" type="text" id="title" placeholder="Enter Title">
+            <input type="hidden" name="type" value="exercise">
+            <input type="hidden" name="source_id" value="<%= exercise.id %>">
+            </div>
+            <div class="form-group col-sm-12">
+            <label for="description">Upload Video Thumbnail<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+            <input class="form-control" type="file" name="thumb_image" required>
+            </div>
+            <div class="form-group col-sm-12">
+            <label for="description">Upload Video File<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+            <input class="form-control" type="file" name="video" required>
+            </div>
+            </div>
+            <div class="box-footer">
+              <% if(typeof error === 'undefined'){ %>
+                <button type="submit" class="btn btn-primary" id="upload-exercise-video-form-btn" name="button">Submit</button>
+              <% } %>
+            </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-md-7">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="box box-primary box-solid">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Uploaded Videos</h3>
+                </div>
+                <div class="box-body">
+                  <table id="uploaded_videos" class="table table-bordered table-hover table-inside-modal">
+                  <thead>
+                  <tr>
+                  <th>Sn.</th>
+                  <th>Title</th>
+                  <th>Video</th>
+                  <th>Action</th>
+                  </tr>
+                  </thead>
+                  <tfoot>
+                  <tr>
+                    <th>Sn.</th>
+                    <th>Title</th>
+                    <th>Video</th>
+                    <th>Action</th>
+                  </tr>
+                  </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% } %>
+  <div class="modal fade" id="video-modal-edit">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal2" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Title</h4>
+        </div>
+        <div class="modal-body text-center">
+
+        </div>
+        <div class="modal-footer">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary pull-right" data-dismiss="modal">Close</button>
+</div>
+<script type="text/javascript">
+  var exercise_table;
+  /*video listing table*/
+  exercise_table = $('#uploaded_videos').DataTable({
+      'pageLength':5,
+      'lengthChange': false,
+      'searching'   : false,
+      "processing": true,
+      "serverSide": true,
+      "order": [[ 0, "desc" ]],
+      "ajax":{
+               url: "../exercise/get-exercise-videos",
+               dataType: "json",
+               type: "POST",
+               data:function(data) {
+                data.source_id = '<%= exercise.id %>';
+                data.type = 'exercise';
+              }
+              // ,
+              // success: function(data){
+              //   console.log(data);
+              // }
+             },
+      "columns": [
+          { "data": "sn" },
+          { "data": "title" },
+          { "data": "image" },
+          { "data": "options" }
+      ]
+
+  });
+  /*upload video*/
+  var form_options = {
+    dataType: "json",
+    beforeSubmit: function(formData, jqForm, options){
+      var formID = jqForm.attr('id');
+      processing_Attr(formID);
+    },
+    success: function(json, responseText, xhr, form){
+      var formID = form.attr('id');
+      if(json.status == 1){
+        successing_Attr(formID,json.data.message,1);
+        exercise_table.draw(false);
+      }
+      else{
+        error_Attr(formID,json.data.error);
+      }
+    }
+  };
+  $("#upload-exercise-video-form").ajaxForm(form_options);
+
+  var deleteVideo = function(element){
+    var id = $(element).attr('data-id');
+    $.ajax({
+      type: 'POST',
+      url: "delete-video",
+      data: {id:id},
+      beforeSend: function(){
+        $("#video-modal-edit .modal-body").html('<i class="fa fa-cog fa-spin fa-3x fa-fw"></i>');
+        $("#video-modal-edit").modal('toggle');
+      },
+      success: function(response) {
+        $("#video-modal-edit .modal-content").html(response);
+      }
+      });
+  }
+
+  var playVideoModal = function(element){
+    var video_url = $(element).attr('video-url');
+    var poster_url = $(element).attr('poster-url');
+    var video_title = $(element).attr('video-title');
+    var video_tag = '<div class="fullscreen-bg"><video width="400" height="300" controls class="controls img-responsive fullscreen-bg__video" controls controlsList="nodownload" webkittallowfullscreen mozallowfullscreen allowfullscreen >';
+    video_tag += '<source src="'+video_url+'" type="video/mp4">';
+    video_tag += '</video></div>';
+    $("#video-modal-edit .modal-title").html(video_title);
+    $("#video-modal-edit .modal-body").html(video_tag);
+    $("#video-modal-edit").modal('toggle');
+  }
+
+  $("button[data-dismiss=modal2]").click(function(){
+    $('#video-modal-edit').modal('toggle');
+});
+
+$('#video-modal-edit,.modal').modal({
+    show: false
+}).on('hidden.bs.modal', function(){
+    $(".alert").remove();
+    $(this).find('video')[0].pause();
+});
+
+var editVideo = function(element){
+  var id = $(element).attr('data-id');
+  $.ajax({
+    type: 'POST',
+    url: "update-video",
+    data: {id:id},
+    beforeSend: function(){
+      $("#video-modal-edit .modal-body").html('<i class="fa fa-cog fa-spin fa-3x fa-fw"></i>');
+      $("#video-modal-edit").modal('toggle');
+    },
+    success: function(response) {
+      $("#video-modal-edit .modal-content").html(response);
+    }
+    });
+}
+</script>

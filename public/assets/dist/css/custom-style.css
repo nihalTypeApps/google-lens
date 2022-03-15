@@ -1,0 +1,39 @@
+table img.img-circle {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+table.table.table-bordered, table.table.table-bordered tr th, table.table.table-bordered tr td {
+    border-color: #3c8dbc;
+}
+table.dataTable thead tr[role="row"] th {
+    border-bottom: 0;
+}
+.custom-width{
+  width: 590px!important;
+}
+.modal-lg{ width: 90%;}
+.table-inside-modal {
+  width: 100%!important;
+}
+.fullscreen-bg {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: -100;
+}
+
+.fullscreen-bg__video {
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+.form-group.choose-file button.btn.btn-primary, .form-group.choose-file input{
+  display: inline-block;
+}
+a.main-text {
+    border: none;
+    font-size: 11px !important;
+}

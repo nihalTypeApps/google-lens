@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<%- include('partials/head') %>
+<body class="hold-transition login-page bg-clr">
+    <div class="login-box">
+        <div class="login-logo">
+          <a href=""><img src="/assets/logo.png" /></a>
+        </div>
+        <!-- /.login-logo -->
+        <div class="login-box-body">
+          <p class="login-box-msg">sign in to start your session</p>
+          <form id="loginForm" action="/login" method="POST">
+            <div class="form-group has-feedback">
+              <input type="email" name="_email" id="user_email" class="form-control" placeholder="Enter your email">
+              <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+              <input type="password" name="_password"  class="form-control" placeholder="Enter your password">
+              <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <% if(typeof error !== 'undefined'){ %>
+              <div class="alert alert-danger"><%= error %></div>
+            <% } %>
+            <div class="row">
+              <!-- /.col -->
+              <div class="col-xs-4">
+                <button type="submit" id="loginForm-btn" class="main-btn btn btn-primary btn-block btn-flat">Login</button>
+              </div>
+              <!-- /.col -->
+            </div>
+          </form>
+          <div class="forgot-login">
+            <a href="./forgot-password">Forgot Password ?</a>
+          </div>
+        </div>
+        <!-- /.login-box-body -->
+      </div>
+<%- include('partials/plain_footer') %>
+</body>
+</html>

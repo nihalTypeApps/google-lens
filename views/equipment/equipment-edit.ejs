@@ -1,0 +1,87 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title"><% if(typeof error === 'undefined'){ %> <%= equipment.title %> <% } else { %> <%= 'Error' %> <% } %></h4>
+</div>
+<form id="equipment-edit-form" method="post" action="/api/update_equipment" enctype="multipart/form-data">
+<div class="modal-body">
+  <%
+  if(typeof error !== 'undefined'){ %>
+  <p class="text-danger"><i class="fa fa-fw fa-warning"></i> <%= error %></p>
+  <% }
+  else{ %>
+    <div class="box box-primary">
+      <div class="box-body">
+        <div class="col-md-9">
+          <div class="box box-primary box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title"></h3>
+            </div>
+            <div class="box-body">
+            <div class="form-group col-sm-12">
+            <label for="title">Title<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+            <input class="form-control" name="title" value="<%= equipment.title %>" type="text" id="title" placeholder="Enter Title">
+            <input type="hidden" name="id" value="<%= equipment.id %>">
+            </div>
+            <div class="form-group col-sm-12">
+            <label for="description">Description<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+            <textarea class="form-control" name="description" id="description" placeholder="Enter Description" rows="8" cols="80"><%= equipment.description %></textarea>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="box box-primary box-solid">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Upload Image</h3>
+                </div>
+                <div class="box-body">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <img class="img-responsive current-image" src="/uploads/equipment/thumb/<%= equipment.image %>" alt="Photo">
+                    </div>
+                  </div>
+                  <input class="form-control" type="file" name="image" id="image" value="">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% } %>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary pull-left" data-dismiss="modal">Close</button>
+  <% if(typeof error === 'undefined'){ %>
+    <button type="submit" class="btn btn-primary " id="equipment-edit-form-btn" name="button">Update</button>
+  <% } %>
+</div>
+</form>
+<script type="text/javascript">
+  /*user update form*/
+  var form_options = {
+    dataType: "json",
+    beforeSubmit: function(formData, jqForm, options){
+      var formID = jqForm.attr('id');
+      processing_Attr(formID);
+    },
+    success: function(json, responseText, xhr, form){
+      console.log(json);
+      var formID = form.attr('id');
+      if(json.status == 1){
+        successing_Attr(formID,json.data.message);
+        if(json.data.image_url){
+          $(".current-image").attr('src',json.data.image_url);
+        }
+        table.draw(false);
+      }
+      else{
+        error_Attr(formID,json.data.error);
+      }
+    }
+  };
+  $("#equipment-edit-form").ajaxForm(form_options);
+</script>

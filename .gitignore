@@ -30,7 +30,11 @@ coverage
 
 # Bower dependency directory (https://bower.io/)
 bower_components
-
+public/uploads/equipment/*
+public/uploads/exercise/*
+public/uploads/video/*
+public/uploads/user/*
+public/uploads/workout/*
 # node-waf configuration
 .lock-wscript
 
@@ -80,7 +84,6 @@ typings/
 
 # Nuxt.js build / generate output
 .nuxt
-dist
 
 # Gatsby files
 .cache/

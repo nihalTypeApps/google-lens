@@ -1,0 +1,74 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal2" aria-label="Close">
+    <span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title"><% if(typeof error === 'undefined'){ %> <%= video.title %> <% } else { %> <%= 'Error' %> <% } %></h4>
+</div>
+<form id="video-update-form" method="post" action="/api/update_video" enctype="multipart/form-data">
+<div class="modal-body">
+  <%
+  if(typeof error !== 'undefined'){ %>
+  <p class="text-danger"><i class="fa fa-fw fa-warning"></i> <%= error %></p>
+  <% }
+  else{ %>
+    <div class="box box-primary">
+      <div class="box-body">
+        <div class="col-md-12">
+          <div class="box box-primary box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title"></h3>
+            </div>
+            <div class="box-body">
+            <div class="form-group col-sm-12">
+            <label for="title">Title<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+            <input class="form-control" name="title" value="<%= video.title %>" type="text" id="title" placeholder="Enter Title">
+            <input type="hidden" name="id" value="<%= video.id %>">
+            </div>
+            <div class="form-group col-sm-12">
+            <label for="title">Upload Video Thumbnail</label>
+            <input class="form-control" type="file" name="thumb_image">
+            </div>
+            <div class="form-group col-sm-12">
+            <label for="title">Upload Video File</label>
+            <input class="form-control" type="file" name="video">
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% } %>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary  pull-left" data-dismiss="modal2">Close</button>
+  <% if(typeof error === 'undefined'){ %>
+    <button type="submit" class="btn btn-primary  " id="video-update-form-btn" name="button">Update</button>
+  <% } %>
+</div>
+</form>
+<script type="text/javascript">
+  $(function(){
+    /*user update form*/
+    var form_options = {
+      dataType: "json",
+      beforeSubmit: function(formData, jqForm, options){
+        var formID = jqForm.attr('id');
+        processing_Attr(formID);
+      },
+      success: function(json, responseText, xhr, form){
+        var formID = form.attr('id');
+        if(json.status == 1){
+          successing_Attr(formID,json.data.message,1);
+          exercise_table.draw(false);
+        }
+        else{
+          error_Attr(formID,json.data.error);
+        }
+      }
+    };
+    $("#video-update-form").ajaxForm(form_options);
+  })
+  $("button[data-dismiss=modal2]").click(function(){
+    $('#video-modal-edit').modal('toggle');
+});
+
+</script>

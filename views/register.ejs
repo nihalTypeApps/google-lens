@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<%- include('partials/head') %>
+<body class="hold-transition login-page bg-clr">
+    <div class="login-box">
+        <div class="login-logo">
+          <a href=""><img src="assets/logo.png" /></a>
+        </div>
+        <!-- /.login-logo -->
+        <div class="login-box-body">
+          <p class="login-box-msg">Sign Up</p>
+          <form id="loginForm" action="" method="POST">
+            <div class="form-group has-feedback">
+              <input type="text" name="_name" id="user_name" class="form-control" placeholder="Enter your name">
+            </div>
+            <div class="form-group has-feedback">
+              <input type="email" name="_email" id="user_email" class="form-control" placeholder="Enter your email">
+            </div>
+            <div class="form-group has-feedback">
+              <input type="text" name="_phone" id="user_phone" class="form-control" placeholder="Enter your phone">
+            </div>
+            <div class="form-group has-feedback">
+              <input type="password" name="_password" id="user_pass"  class="form-control" placeholder="Enter new password">
+            </div>
+            <% if(typeof msg != 'undefined'){ %>
+              <div class="alert alert-success"><%= msg %></div>
+            <% }
+              if(typeof error !== 'undefined'){ %>
+              <div class="alert alert-danger"><%= error %></div>
+            <% } %>
+            <div class="row">
+              <!-- /.col -->
+              <div class="col-xs-4">
+                <button type="submit" id="loginForm-btn" class="main-btn btn btn-primary btn-block btn-flat">Sign Up</button>
+              </div>
+              <!-- /.col -->
+            </div>
+          </form>
+          <div class="forgot-login">
+            <div class="link"><a href="./login">Login</a></div>
+          </div>
+        </div>
+        <!-- /.login-box-body -->
+      </div>
+<%- include('partials/plain_footer') %>
+</body>
+</html>

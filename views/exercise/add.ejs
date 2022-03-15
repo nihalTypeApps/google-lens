@@ -1,0 +1,123 @@
+<%- include('../partials/header') %>
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>
+          Exercise
+          <small><%= page_title %></small>
+        </h1>
+        <ol class="breadcrumb">
+          <li><a href="../"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+          <li><a href="../exercise/manage">Exercise</a></li>
+          <li class="active"><%= page_title %></li>
+        </ol>
+      </section>
+      <section class="content">
+      <div class="row">
+        <!-- /.col -->
+        <div class="col-md-12">
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title"><%= page_title %></h3>
+
+              <div class="box-tools pull-right">
+
+              </div>
+            </div>
+            <form id="exercise-add-form" method="post" action="/api/add_exercise" enctype="multipart/form-data">
+            <div class="box-body">
+              <div class="col-md-9">
+                <div class="box box-primary box-solid">
+                  <div class="box-header with-border">
+                    <h3 class="box-title"></h3>
+                  </div>
+                  <div class="box-body">
+                  <div class="form-group col-sm-12">
+                  <label for="title">Title<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+                  <input class="form-control" name="title" type="text" id="title" placeholder="Enter Title">
+                  </div>
+                  <div class="form-group col-sm-3">
+                  <label for="reps">Reps<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+                  <input class="form-control" name="reps" type="text" id="reps" placeholder="Enter Reps">
+                  </div>
+                  <div class="form-group col-sm-3">
+                  <label for="sets">Sets<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+                  <input class="form-control" name="sets" type="text" id="sets" placeholder="Enter Sets">
+                  </div>
+                  <div class="form-group col-sm-3">
+                    <label for="sets">Weight<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+                    <input class="form-control" name="weight" type="text" id="weight" placeholder="Enter Weight">
+                    </div>
+                  <div class="form-group col-sm-3">
+                  <label for="duration">Duration<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+                  <input class="form-control" name="duration" type="number" id="duration" placeholder="Enter Duration in Minutes">
+                  </div>
+                  <div class="form-group col-sm-12">
+                  <label for="description">Description<sup><i class="fa fa-star text-red" aria-hidden="true"></i></sup></label>
+                  <textarea class="form-control" name="description" id="description" placeholder="Enter Description" rows="8" cols="80"></textarea>
+                  </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="box box-primary box-solid">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">Upload Image</h3>
+                  </div>
+                  <div class="box-body">
+                    <input class="form-control" type="file" name="image" id="image" value="">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="box-footer">
+              <button type="submit" class="btn btn-primary pull-right btn-lg" id="exercise-add-form-btn">Save</button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="modal fade" id="modal-edit">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Job Detail</h4>
+          </div>
+          <div class="modal-body text-center">
+
+          </div>
+          <div class="modal-footer">
+
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<%- include('../partials/footer') %>
+<script type="text/javascript">
+  $(function(){
+    /*user update form*/
+    var form_options = {
+      dataType: "json",
+      beforeSubmit: function(formData, jqForm, options){
+        var formID = jqForm.attr('id');
+        processing_Attr(formID);
+      },
+      success: function(json, responseText, xhr, form){
+        console.log(json);
+        var formID = form.attr('id');
+        if(json.status == 1){
+          successing_Attr(formID,json.data.message,1);
+        }
+        else{
+          error_Attr(formID,json.data.error);
+        }
+      }
+    };
+    $("#exercise-add-form").ajaxForm(form_options);
+  })
+</script>
+</body>
+</html>
